@@ -1,0 +1,21 @@
+{
+    "name": "bgillet/slim-orm",
+    "description": "ORM for Slim framework based on Idiorm & Paris.",
+    "require": {
+        "j4mie/paris": "*",
+        "slim/slim": "*"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Benjamin GILLET",
+            "email": "bgillet@hotmail.fr"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {
+            "BenGee\\Slim\\Db\\": "src/BenGee/Slim/Db/"
+        }
+    }
+}
