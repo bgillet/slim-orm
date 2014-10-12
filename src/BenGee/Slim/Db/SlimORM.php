@@ -31,6 +31,8 @@
 
 namespace BenGee\Slim\Db;
 
+use \BenGee\Slim\Utils\StringUtils;
+
 /**
  * Slim ORM wrapper class for Idiorm & Paris.
  * Offer a static method to register the ORM wrapper as a resource in a Slim
@@ -194,14 +196,14 @@ final class SlimORM
     {
         $dsn = (is_string($dsn) ? trim($dsn) : false);
         $name = (is_string($name) && !ctype_space($name) ? trim($name) : self::DEFAULT_CNX);
-        if (!empty($dsn))
+        if (!StringUtils::emptyOrSpaces($dsn))
         {
             \ORM::configure(self::DSN, $dsn, $name);
-            $usr = (is_string($usr) && !ctype_space($usr) ? trim($usr) : false);
+            $usr = (!StringUtils::emptyOrSpaces($usr) ? trim($usr) : false);
             if ($usr !== false) \ORM::configure(self::USR, $usr, $name);
-            $pwd = (is_string($pwd) ? $pwd : false);
+            $pwd = (!StringUtils::emptyOrSpaces($pwd) ? $pwd : false);
             if ($pwd !== false) \ORM::configure(self::PWD, $pwd, $name);
-            $opt = (is_string($opt) ? trim($opt) : false);
+            $opt = (!StringUtils::emptyOrSpaces($opt) ? trim($opt) : false);
             if (!empty($opt)) \ORM::configure(self::OPT, $opt, $name);
         }
         else
