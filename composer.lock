@@ -4,8 +4,41 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "20a9f7af47f4589f84ffa912fa8c9343",
+    "hash": "b2f0a33494b5eb0d2b5ffadeb9350255",
     "packages": [
+        {
+            "name": "bgillet/slim-utils",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bgillet/slim-utils.git",
+                "reference": "cc18529d52333b8aea6c5dbbd353dc764c41fc5e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bgillet/slim-utils/zipball/cc18529d52333b8aea6c5dbbd353dc764c41fc5e",
+                "reference": "cc18529d52333b8aea6c5dbbd353dc764c41fc5e",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "BenGee\\": "src/BenGee/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Benjamin GILLET",
+                    "email": "bgillet@hotmail.fr"
+                }
+            ],
+            "description": "Collection of utility classes for Slim based apps",
+            "time": "2014-10-12 08:30:13"
+        },
         {
             "name": "j4mie/idiorm",
             "version": "v1.5.1",

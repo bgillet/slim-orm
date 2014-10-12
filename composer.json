@@ -2,8 +2,9 @@
     "name": "bgillet/slim-orm",
     "description": "ORM for Slim framework based on Idiorm & Paris.",
     "require": {
-        "j4mie/paris": "*",
-        "slim/slim": "*"
+        "j4mie/paris": "~1.5",
+        "slim/slim": "~2.4",
+        "bgillet/slim-utils": "~1.1"
     },
     "license": "MIT",
     "authors": [
