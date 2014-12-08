@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "bgillet/slim-utils",
-            "version": "1.1.0",
+            "version": "1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bgillet/slim-utils.git",
-                "reference": "cc18529d52333b8aea6c5dbbd353dc764c41fc5e"
+                "reference": "f9e3924ab1398338f6a5ef0203c4213e6d896893"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bgillet/slim-utils/zipball/cc18529d52333b8aea6c5dbbd353dc764c41fc5e",
-                "reference": "cc18529d52333b8aea6c5dbbd353dc764c41fc5e",
+                "url": "https://api.github.com/repos/bgillet/slim-utils/zipball/f9e3924ab1398338f6a5ef0203c4213e6d896893",
+                "reference": "f9e3924ab1398338f6a5ef0203c4213e6d896893",
                 "shasum": ""
             },
             "type": "library",
@@ -37,7 +37,7 @@
                 }
             ],
             "description": "Collection of utility classes for Slim based apps",
-            "time": "2014-10-12 08:30:13"
+            "time": "2014-10-12 12:01:43"
         },
         {
             "name": "j4mie/idiorm",
