@@ -70,6 +70,85 @@ final class SlimORM
     const OPT = 'driver_options';
     
     /**
+     * Constant defining connection's query caching activation parameter's name.
+     * When configuring a connection, this parameter is optional.
+	 * This lets you activating query caching for your connection.
+	 * Query caching is disabled ('false') by default.
+     */
+    const CACHE = 'caching';
+    
+    /**
+     * Constant defining connection's query caching automatic cleaning parameter's name.
+     * When configuring a connection, this parameter is optional.
+	 * This lets you activating activating automatic cache cleaning for your connection.
+	 * Automatic cache cleaning is disabled ('false') by default.
+     */
+    const CACHE_CLEAN = 'caching_auto_clear';
+    
+    /**
+     * Constant defining connection's logging activation parameter's name.
+     * When configuring a connection, this parameter is optional.
+	 * This lets you activating query logging for your connection.
+	 * Query logging is disabled ('false') by default.
+     */
+    const LOG = 'logging';
+    
+    /**
+     * Constant defining connection's logger parameter's name.
+     * When configuring a connection, this parameter is optional.
+	 * This lets you specifying your own logger through a callable method.
+     */
+    const LOG_FNC = 'logging';
+    
+    /**
+     * Constant defining connection's results return method's name.
+     * When configuring a connection, this parameter is optional.
+	 * It specifies how collections of results are returned :
+     * - 'true'  : result sets
+	 * - 'false' : array (default)
+     */
+    const RES_SET = 'return_result_sets';
+    
+    /**
+     * Constant defining connection's error mode parameter's name.
+     * When configuring a connection, this parameter is optional.
+	 * This lets you configuring PDO error mode using one of the PDO constant.
+	 * Default is PDO::ERRMODE_EXCEPTION.
+     */
+    const ERR_MOD = 'error_mode';
+    
+    /**
+     * Constant defining connection's identifier quote character parameter's name.
+     * When configuring a connection, this parameter is optional.
+	 * By default, this parameter is not specified and quote character is detected.
+     */
+    const QOT_CAR = 'identifier_quote_character';
+    
+    /**
+     * Constant defining connection's default primary key parameter's name.
+     * When configuring a connection, this parameter is optional.
+	 * This lets you configuring default name to use to identify your primary key in every tables.
+	 * By default, this parameter is set to 'id'.
+     */
+    const ID_COL = 'id_column';
+    
+    /**
+     * Constant defining connection's per table primary key list parameter's name.
+     * When configuring a connection, this parameter is optional.
+	 * This lets you configuring a specific primary key name for a set of table.
+	 * By default, this parameter is not specified and the default 'id_column' parameter value is used.
+     */
+    const ID_OVR = 'id_column_overrides';
+    
+    /**
+     * Constant defining connection's limit clause style parameter's name.
+     * When configuring a connection, this parameter is optional.
+	 * This lets you configuring a limit clause style for you PDO driver.
+	 * By default, this parameter is not specified and the clause style is detected.
+     */
+    const LIM_STY = 'limit_clause_style';
+    
+    /**
      * Constant defining name of the default connection.
      */
     const DEFAULT_CNX = \ORM::DEFAULT_CONNECTION;
@@ -140,12 +219,26 @@ final class SlimORM
         if (!empty($connections) && !is_array($connections)) throw new \ErrorException("Invalid '" . self::CONNECTIONS . "' setting ! Must be an array of named connections containing array of parameters !");
         foreach ($connections as $name => $parameters)
         {
-            if (empty($parameters) || !is_array($parameters) || !array_key_exists(self::DSN, $parameters)) throw new \ErrorException("A connection must be an array of named parameters : '" . self::DSN . "' (mandatory), '" . self::USR . "' (optional), '" . self::PWD . "' (optional) and '" . self::OPT . "' (optional) !");
+            if (empty($parameters) || !is_array($parameters) || !array_key_exists(self::DSN, $parameters)) throw new \ErrorException("A connection must be an array of named parameters : '" . self::DSN . "' (mandatory), '" . self::USR . "' (optional), '" . self::PWD . "' (optional) and '" . self::OPT . "' (optional) and lots of more. See documentation for more details about available parameters.");
             $dsn = $parameters[self::DSN];
             $usr = $parameters[self::USR];
             $pwd = $parameters[self::PWD];
             $opt = $parameters[self::OPT];
             $this->addConnection($dsn, $usr, $pwd, $opt, $name);
+			foreach ($parameters as $key => $value)
+			{
+				switch ($key)
+				{
+					case self::DSN:
+					case self::USR:
+					case self::PWD:
+					case self::OPT:
+						break;
+					default:
+						self::configure($key, $value, $name);
+						break;
+				}
+			}
         }
     }
     
@@ -162,7 +255,7 @@ final class SlimORM
      */
     public function resetConnections()
     {
-        ORM::reset_config();
+        \ORM::reset_config();
     }
     
     /**
@@ -198,13 +291,13 @@ final class SlimORM
         $name = (is_string($name) && !ctype_space($name) ? trim($name) : self::DEFAULT_CNX);
         if (!StringUtils::emptyOrSpaces($dsn))
         {
-            \ORM::configure(self::DSN, $dsn, $name);
+            self::configure(self::DSN, $dsn, $name);
             $usr = (!StringUtils::emptyOrSpaces($usr) ? trim($usr) : false);
-            if ($usr !== false) \ORM::configure(self::USR, $usr, $name);
+            if ($usr !== false) self::configure(self::USR, $usr, $name);
             $pwd = (!StringUtils::emptyOrSpaces($pwd) ? $pwd : false);
-            if ($pwd !== false) \ORM::configure(self::PWD, $pwd, $name);
+            if ($pwd !== false) self::configure(self::PWD, $pwd, $name);
             $opt = (!StringUtils::emptyOrSpaces($opt) ? trim($opt) : false);
-            if (!empty($opt)) \ORM::configure(self::OPT, $opt, $name);
+            if (!empty($opt)) self::configure(self::OPT, $opt, $name);
         }
         else
         {
@@ -232,5 +325,16 @@ final class SlimORM
     public function table($table, $connection = self::DEFAULT_CNX)
     {
         return \ORM::for_table($table, $connection);
+    }
+    
+    /**
+     * Shortcut to internal ORM configuration method.
+     * @param string $key Parameter's name.
+     * @param mixed $value Parameter's value.
+     * @param string $connection_name Name of the connection parameter applies to.
+     */
+    public static function configure($key, $value = null, $connection_name = self::DEFAULT_CNX)
+    {
+        \ORM::configure($key, $value, $connection_name);
     }
 }
